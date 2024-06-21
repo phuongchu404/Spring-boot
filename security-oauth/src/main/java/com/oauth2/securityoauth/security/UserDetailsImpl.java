@@ -1,6 +1,7 @@
 package com.oauth2.securityoauth.security;
 
 import com.oauth2.securityoauth.entity.Role;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,6 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
+@Builder
 public class UserDetailsImpl implements UserDetails {
 
     private Long id;

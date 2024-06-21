@@ -41,7 +41,7 @@ public class SecurityConfig {
     private boolean allowCredentials;
 
     private final String[] commonURLs = {
-            "/api/auth/**",
+            "/api/session/**",
             "/email/**",
     };
 
@@ -64,17 +64,17 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList(allowedOrigins));
-        corsConfiguration.setAllowCredentials(allowCredentials);
-        corsConfiguration.setAllowedMethods(Arrays.asList(allowedMethods));
-        corsConfiguration.addAllowedHeader("*");
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource(){
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        corsConfiguration.setAllowedOrigins(Arrays.asList(allowedOrigins));
+//        corsConfiguration.setAllowCredentials(allowCredentials);
+//        corsConfiguration.setAllowedMethods(Arrays.asList(allowedMethods));
+//        corsConfiguration.addAllowedHeader("*");
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", corsConfiguration);
+//        return source;
+//    }
 
 //        @Bean
 //    public CorsConfigurationSource corsConfigurationSource(){

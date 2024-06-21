@@ -24,12 +24,11 @@ public class JwtUtils {
     @Value("${app.security.jwt-expiration}")
     private long jwtExpiration;
 
-    public String createToken(Authentication authentication){
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    public String createToken(String username){
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.ES256, key())
