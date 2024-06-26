@@ -19,16 +19,24 @@ public class UserDetailsImpl implements UserDetails {
 
     private String username;
 
-    private Set<Role> roles;
+    //private Set<Role> roles;
 
-    public UserDetailsImpl(Long id, String username,Set<Role> authorities) {
+//    public UserDetailsImpl(Long id, String username,Set<Role> authorities) {
+//        this.id = id;
+//        this.username = username;
+//        this.roles = authorities;
+//    }
+
+    private Set<String> roles;
+
+    public UserDetailsImpl(Long id, String username,Set<String> roles) {
         this.id = id;
         this.username = username;
-        this.roles = authorities;
+        this.roles = roles;
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
+        return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
     }
 
     @Override

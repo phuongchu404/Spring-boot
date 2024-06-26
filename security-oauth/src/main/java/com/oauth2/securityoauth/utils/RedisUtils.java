@@ -10,25 +10,25 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisUtils {
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
-    public void setValue(String key, Object value) {
+    public void setValue(String key, String value) {
 
         redisTemplate.opsForValue().set(key, value);
     }
 
-    public void setValue(String key, Object value, long timeout, TimeUnit timeUnit) {
+    public void setValue(String key, String value, long timeout, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
     }
 
-    public Object getValue(String key) {
+    public String getValue(String key) {
         return redisTemplate.opsForValue().get(key);
     }
 
     public Boolean deleteKey(String key) {
         return redisTemplate.delete(key);
     }
-    public void expireValue(String key, int timeout, TimeUnit timeUnit) {
+    public void expireValue(String key, long timeout, TimeUnit timeUnit) {
         redisTemplate.expire(key,timeout,timeUnit);
     }
 }

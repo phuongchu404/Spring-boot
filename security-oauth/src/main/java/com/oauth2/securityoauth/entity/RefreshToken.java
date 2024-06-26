@@ -27,11 +27,11 @@ public class RefreshToken {
 
     @Column(name = "create_time")
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
+    //@Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
     @Column(name = "update_time")
     @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
+    //@Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
 }

@@ -26,8 +26,7 @@ public class User {
     @Size(min = 1, max = 100)
     private String username;
 
-    @Column(name = "password", nullable = false, length = 50)
-    @Size(min = 4, max = 32)
+    @Column(name = "password", nullable = false, length = 100)
     private String password;
 
     @ColumnDefault("b'1'")
@@ -42,12 +41,10 @@ public class User {
 
     @Column(name = "create_time")
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createTime;
 
     @Column(name = "update_time")
     @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateTime;
 
     @Column(name = "reset_password_token", length= 30)

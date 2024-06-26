@@ -17,16 +17,20 @@ import com.oauth2.securityoauth.repo.UserRoleRepository;
 import com.oauth2.securityoauth.security.JwtUtils;
 import com.oauth2.securityoauth.security.UserDetailsImpl;
 import com.oauth2.securityoauth.service.SessionService;
+import com.oauth2.securityoauth.utils.JsonConvert;
 import com.oauth2.securityoauth.utils.MessageResponse;
 import com.oauth2.securityoauth.utils.RedisUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -58,6 +62,9 @@ public class SessionServiceImpl implements SessionService {
 
     @Value("${app.security.jwt-expiration}")
     private Long jwtExpiration;
+
+    @Value("${app.security.token-prefix}")
+    private String TOKEN_PREFIX;
 
     @Override
     public ResponseEntity<?> register(RegisterRequest request) {
@@ -98,7 +105,7 @@ public class SessionServiceImpl implements SessionService {
         User user  = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
-        user.setUsername(passwordEncoder.encode(request.getPassword()));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setStatus(ActiveStatus.ACTIVE.getValue());
         userRepository.save(user);
 
@@ -126,12 +133,31 @@ public class SessionServiceImpl implements SessionService {
         }
         String token = jwtUtils.createToken(user.getUsername());
         Set<Role> roles = userRoleRepository.findRolesByUsername(user.getUsername());
+        Set<String> stringRoles = roles.stream().map(Role::getName).collect(Collectors.toSet());
         UserDetailsImpl userDetails = UserDetailsImpl.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .roles(roles)
+                .roles(stringRoles)
                 .build();
-        redisUtils.setValue(token, userDetails, jwtExpiration, TimeUnit.MILLISECONDS);
-        return ResponseEntity.ok(new JwtResponse(userDetails.getUsername(), roles.stream().map(Role::getName).collect(Collectors.toSet())));
+        redisUtils.setValue(token, JsonConvert.convertObjectToJson(userDetails), jwtExpiration, TimeUnit.MILLISECONDS);
+        return ResponseEntity.ok(new JwtResponse(token,userDetails.getUsername(), roles.stream().map(Role::getName).collect(Collectors.toSet())));
+    }
+
+    @Override
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String token = parseJwt(request);
+        if(token == null) {
+            return ResponseEntity.ok("logout success");
+        }
+        boolean validateToken = redisUtils.deleteKey(token);
+
+        return validateToken ? ResponseEntity.ok("logout successfully") : ResponseEntity.badRequest().body("Login failed");
+    }
+    private String parseJwt(HttpServletRequest request){
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if(StringUtils.hasText(header)&& header.startsWith(TOKEN_PREFIX)){
+            return header.substring(TOKEN_PREFIX.length());
+        }
+        return null;
     }
 }

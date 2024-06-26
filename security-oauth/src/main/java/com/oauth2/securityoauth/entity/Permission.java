@@ -35,12 +35,12 @@ public class Permission {
 
     @Column(name = "create_time")
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
+    //@Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createTime;
 
     @Column(name = "update_time")
     @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
+    //@Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateTime;
 
 }

@@ -8,6 +8,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class JwtResponse {
+    private String token;
     private String username;
     //private String email;
     private Set<String> roles;
