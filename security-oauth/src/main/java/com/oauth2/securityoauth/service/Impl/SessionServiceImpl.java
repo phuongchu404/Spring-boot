@@ -125,7 +125,7 @@ public class SessionServiceImpl implements SessionService {
     public ResponseEntity<?> login(LoginRequest request) {
         Optional<User> optional = userRepository.findByUsernameAndStatus(request.getUsername(), ActiveStatus.ACTIVE.getValue());
         if(!optional.isPresent()) {
-            throw  new ResponseException(Error.INCORRECT_USERNAME);
+            throw new ResponseException(Error.INCORRECT_USERNAME);
         }
         User user = optional.get();
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -139,7 +139,7 @@ public class SessionServiceImpl implements SessionService {
                 .username(user.getUsername())
                 .roles(stringRoles)
                 .build();
-        redisUtils.setValue(token, JsonConvert.convertObjectToJson(userDetails), jwtExpiration, TimeUnit.MILLISECONDS);
+        redisUtils.setValue(token, JsonConvert.convertObjectToJson(userDetails), jwtExpiration, TimeUnit.SECONDS);
         return ResponseEntity.ok(new JwtResponse(token,userDetails.getUsername(), roles.stream().map(Role::getName).collect(Collectors.toSet())));
     }
 

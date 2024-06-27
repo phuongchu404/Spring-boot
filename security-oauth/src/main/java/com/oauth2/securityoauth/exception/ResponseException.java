@@ -10,4 +10,8 @@ public class ResponseException extends RuntimeException{
         super(error.getMessage());
         this.error = error;
     }
+    public Error getError(){
+        return error;
+
+    }
 }

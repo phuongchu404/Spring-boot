@@ -1,5 +1,6 @@
 package com.oauth2.securityoauth.advice;
 
+import com.oauth2.securityoauth.exception.ResponseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -32,5 +34,12 @@ public class GlobalExceptionHandler {
         });
         errors.put("message", messages);
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(ResponseException.class)
+    public ResponseEntity<?> handleResponseException(ResponseException exception){
+        Map<String, Object> errors = new HashMap<>();
+        errors.put("message", exception.getMessage());
+        return ResponseEntity.status(exception.getError().getHttpStatus()).body(errors);
     }
 }

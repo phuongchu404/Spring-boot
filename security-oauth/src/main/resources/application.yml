@@ -50,11 +50,15 @@ spring:
 app:
   security:
     jwt-secret: phuongchu12313123131332131321321321313131312313
-    jwt-expiration: 10800000 #1000*60*60*3
-    jwt-refresh-token-expiration: 43200000 #1000*60*60*12
+    jwt-expiration: 10800 #60*60*3
+    jwt-refresh-token-expiration: 43200 #60*60*12
     token-prefix: "Bearer "
     jwt-cookie-name: phuongchu
+  cookie:
+    cookie-name: phuongchu
 cor:
   allow-origin: http://localhost:8080, https://localhost:8088
   allow-method: POST, GET, PUT, DELETE
   allow-credentials: true
+
+

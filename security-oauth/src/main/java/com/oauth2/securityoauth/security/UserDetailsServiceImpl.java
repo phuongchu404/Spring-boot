@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String token) throws UsernameNotFoundException {
         Optional<String> value = Optional.ofNullable(redisUtils.getValue(token));
         if(!value.isPresent()) throw  new ResponseException(Error.TOKEN_INVALID);
-        redisUtils.expireValue(token, expiration, TimeUnit.MILLISECONDS);
+        redisUtils.expireValue(token, expiration, TimeUnit.SECONDS);
         return value
                 .map(item -> JsonConvert.convertJsonToObject(item,UserDetailsImpl.class)).get();
     }
