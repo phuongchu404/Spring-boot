@@ -61,4 +61,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
+
 }
