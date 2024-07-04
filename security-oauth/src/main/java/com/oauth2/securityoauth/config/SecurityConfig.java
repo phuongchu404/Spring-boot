@@ -2,6 +2,10 @@ package com.oauth2.securityoauth.config;
 
 import com.oauth2.securityoauth.security.AuthEntryPointJwt;
 import com.oauth2.securityoauth.security.AuthTokenFilter;
+import com.oauth2.securityoauth.security.oauth2.CustomOAuth2UserService;
+import com.oauth2.securityoauth.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.oauth2.securityoauth.security.oauth2.OAuth2AuthenticationFailureHandler;
+import com.oauth2.securityoauth.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -27,12 +31,6 @@ import java.util.List;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    @Autowired
-    private AuthEntryPointJwt authEntryPoint;
-
-    @Autowired
-    private AuthTokenFilter authTokenFilter;
-
     @Value("${cor.allow-method}")
     private String[] allowedMethods;
 
@@ -46,6 +44,25 @@ public class SecurityConfig {
             "/api/session/**",
             "/email/**",
     };
+
+    @Autowired
+    private AuthEntryPointJwt authEntryPoint;
+
+    @Autowired
+    private AuthTokenFilter authTokenFilter;
+
+    //Oauth2
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
+
+    @Autowired
+    private OAuth2AuthenticationSuccessHandler auth2AuthenticationSuccessHandler;
+
+    @Autowired
+    private OAuth2AuthenticationFailureHandler auth2AuthenticationFailureHandler;
+
+    @Autowired
+    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -62,6 +79,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests ->authorizeHttpRequests
                         .requestMatchers(commonURLs).permitAll()
                         .anyRequest().authenticated())
+                .oauth2Login(oauth2Login -> oauth2Login
+                        .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint
+                                .baseUri("/oauth2/authorize")
+                                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
+                        .redirectionEndpoint(redirectionEndpoint -> redirectionEndpoint
+                                .baseUri("/oauth2/callback/*"))
+                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
+                                .userService(customOAuth2UserService))
+                        .successHandler(auth2AuthenticationSuccessHandler)
+                        .failureHandler(auth2AuthenticationFailureHandler))
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

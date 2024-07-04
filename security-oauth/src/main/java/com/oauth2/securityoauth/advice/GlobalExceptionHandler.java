@@ -1,5 +1,6 @@
 package com.oauth2.securityoauth.advice;
 
+import com.oauth2.securityoauth.exception.OAuth2AuthenticationProcessingException;
 import com.oauth2.securityoauth.exception.ResponseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +42,12 @@ public class GlobalExceptionHandler {
         Map<String, Object> errors = new HashMap<>();
         errors.put("message", exception.getMessage());
         return ResponseEntity.status(exception.getError().getHttpStatus()).body(errors);
+    }
+
+    @ExceptionHandler(OAuth2AuthenticationProcessingException.class)
+    public ResponseEntity<?> handleOAuth2AuthenticationProcessingException(OAuth2AuthenticationProcessingException exception){
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 }

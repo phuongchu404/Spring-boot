@@ -61,8 +61,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
+    // add columns image_url, email_verified, provider in OAuth2
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;
+
+    @Column(name = "provider_id")
+    private String providerId;
+
+    @Column(name = "name")
+    private String name;
 
 }

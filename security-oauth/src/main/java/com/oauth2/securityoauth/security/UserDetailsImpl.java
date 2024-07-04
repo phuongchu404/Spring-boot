@@ -1,19 +1,22 @@
 package com.oauth2.securityoauth.security;
 
 import com.oauth2.securityoauth.entity.Role;
+import com.oauth2.securityoauth.entity.User;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
 @Builder
-public class UserDetailsImpl implements UserDetails {
+public class UserDetailsImpl implements UserDetails, OAuth2User {
 
     private Long id;
 
@@ -28,16 +31,28 @@ public class UserDetailsImpl implements UserDetails {
 //    }
 
     private Set<String> roles;
+    private Map<String, Object> attributes;
 
     public UserDetailsImpl(Long id, String username,Set<String> roles) {
         this.id = id;
         this.username = username;
         this.roles = roles;
     }
+    public UserDetailsImpl(Long id, String username,Set<String> roles,Map<String, Object> attributes) {
+        this(id, username, roles);
+        this.attributes = attributes;
+    }
+
+    @Override
+    public Map<String, Object> getAttribute(String name) {
+        return attributes;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
     }
+
 
     @Override
     public String getPassword() {
@@ -67,5 +82,10 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return String.valueOf(id);
     }
 }
