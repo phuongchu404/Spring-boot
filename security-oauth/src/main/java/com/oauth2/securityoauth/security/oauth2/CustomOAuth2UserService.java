@@ -25,7 +25,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest request) throws OAuth2AuthenticationException{
         OAuth2User oAuth2User = super.loadUser(request);
         try {
-            return
+            return null;
         }
     }
 
@@ -47,6 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }else{
             user = registerNewUser(request, oAuth2UserInfo);
         }
+        return null;
     }
 
     private User registerNewUser(OAuth2UserRequest request, OAuth2UserInfo oAuth2UserInfo){
