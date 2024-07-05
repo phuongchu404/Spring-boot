@@ -22,11 +22,18 @@ public class User {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "username", nullable = false, length = 100)
+//    @Column(name = "username", nullable = false, length = 100)
+//    @Size(min = 1, max = 100)
+//    private String username;
+//
+//    @Column(name = "password", nullable = false, length = 100)
+//    private String password;
+
+    @Column(name = "username",length = 100)
     @Size(min = 1, max = 100)
     private String username;
 
-    @Column(name = "password", nullable = false, length = 100)
+    @Column(name = "password",length = 100)
     private String password;
 
     @ColumnDefault("b'1'")

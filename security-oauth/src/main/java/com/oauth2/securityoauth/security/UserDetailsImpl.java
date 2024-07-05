@@ -15,12 +15,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
-@Builder
 public class UserDetailsImpl implements UserDetails, OAuth2User {
 
     private Long id;
 
     private String username;
+
+    private String email;
 
     //private Set<Role> roles;
 
@@ -33,13 +34,19 @@ public class UserDetailsImpl implements UserDetails, OAuth2User {
     private Set<String> roles;
     private Map<String, Object> attributes;
 
+    public UserDetailsImpl(Long id, String email){
+        this.id = id;
+        this.email = email;
+    }
+
     public UserDetailsImpl(Long id, String username,Set<String> roles) {
         this.id = id;
         this.username = username;
         this.roles = roles;
     }
-    public UserDetailsImpl(Long id, String username,Set<String> roles,Map<String, Object> attributes) {
-        this(id, username, roles);
+    public UserDetailsImpl(Long id, String email,Set<String> roles,Map<String, Object> attributes) {
+        this(id,email);
+        this.roles = roles;
         this.attributes = attributes;
     }
 

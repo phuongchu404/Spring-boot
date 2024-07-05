@@ -88,6 +88,7 @@ public class SessionServiceImpl implements SessionService {
         userRole.setUser(user);
         userRole.setRole(role);
         userRoleRepository.save(userRole);
+
         return ResponseEntity.ok(new MessageResponse("User registered successfully"));
     }
 
@@ -134,11 +135,7 @@ public class SessionServiceImpl implements SessionService {
         String token = jwtUtils.createToken(user.getUsername());
         Set<Role> roles = userRoleRepository.findRolesByUsername(user.getUsername());
         Set<String> stringRoles = roles.stream().map(Role::getName).collect(Collectors.toSet());
-        UserDetailsImpl userDetails = UserDetailsImpl.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .roles(stringRoles)
-                .build();
+        UserDetailsImpl userDetails = new UserDetailsImpl(user.getId(), user.getUsername(), stringRoles);
         redisUtils.setValue(token, JsonConvert.convertObjectToJson(userDetails), jwtExpiration, TimeUnit.SECONDS);
         return ResponseEntity.ok(new JwtResponse(token,userDetails.getUsername(), roles.stream().map(Role::getName).collect(Collectors.toSet())));
     }
