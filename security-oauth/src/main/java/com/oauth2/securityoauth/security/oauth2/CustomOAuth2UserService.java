@@ -24,7 +24,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.naming.AuthenticationException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;

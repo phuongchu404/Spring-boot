@@ -1,8 +1,6 @@
 package com.oauth2.securityoauth.security;
 
-import com.oauth2.securityoauth.entity.Role;
-import com.oauth2.securityoauth.entity.User;
-import lombok.Builder;
+
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

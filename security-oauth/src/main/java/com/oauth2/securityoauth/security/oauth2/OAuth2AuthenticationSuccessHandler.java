@@ -4,6 +4,7 @@ import com.oauth2.securityoauth.exception.BadRequestException;
 import com.oauth2.securityoauth.security.JwtUtils;
 import com.oauth2.securityoauth.security.UserDetailsImpl;
 import com.oauth2.securityoauth.utils.CookieUtils;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,7 +36,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String targetUrl = determineTargetUrl(request, response, authentication);
         if(response.isCommitted()){
             log.info("Response has already been committed. Unable to redirect to " + targetUrl);
@@ -65,7 +66,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         URI clientRedirectUri = URI.create(uri);
         return authorizedRedirectUris.stream().anyMatch(authorizedRedirectUri ->{
             URI authorizedURI = URI.create(authorizedRedirectUri);
-            if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost()) && authorizedURI.getPort() == clientRedirectUri.getPort()) {
+            if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+                    && authorizedURI.getPort() == clientRedirectUri.getPort()) {
                 return true;
             }
             return false;
