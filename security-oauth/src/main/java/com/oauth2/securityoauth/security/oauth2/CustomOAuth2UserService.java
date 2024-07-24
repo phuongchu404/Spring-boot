@@ -68,7 +68,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }else{
             userOAuth2Response = registerNewUser(request, oAuth2UserInfo);
         }
-        UserDetailsImpl userDetails = new UserDetailsImpl(userOAuth2Response.getId(), userOAuth2Response.getEmail(), userOAuth2Response.getRoles(), oAuth2User.getAttributes());
+        UserDetailsImpl userDetails = new UserDetailsImpl(userOAuth2Response.getId(), userOAuth2Response.getEmail(),userOAuth2Response.getUsername(), userOAuth2Response.getRoles(), oAuth2User.getAttributes());
         return userDetails;
     }
 
@@ -76,7 +76,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user = new User();
         user.setProvider(Provider.valueOf(request.getClientRegistration().getRegistrationId()));
         user.setProviderId(oAuth2UserInfo.getId());
-        user.setUsername(oAuth2UserInfo.getName());
+        //user.setUsername(oAuth2UserInfo.getName());
+        user.setUsername(oAuth2UserInfo.getEmail());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
         user = userRepository.save(user);
@@ -88,7 +89,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         userRole = userRoleRepository.save(userRole);
         Set<String> roles = Stream.of(userRole.getRole().getName()).collect(Collectors.toSet());
 
-        UserOAuth2Response response = new UserOAuth2Response(user.getId(), user.getEmail(), roles);
+        UserOAuth2Response response = new UserOAuth2Response(user.getId(), user.getEmail(),user.getUsername(), roles);
         return response;
     }
 
@@ -98,7 +99,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         Set<String> roles = userRoleRepository.findRolesByEmail(existingUser.getEmail()).stream().map(Role::getName).collect(Collectors.toSet());
 
-        UserOAuth2Response response = new UserOAuth2Response(existingUser.getId(), existingUser.getEmail(), roles);
+        UserOAuth2Response response = new UserOAuth2Response(existingUser.getId(), existingUser.getEmail(),existingUser.getUsername(), roles);
 
         return response;
     }

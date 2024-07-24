@@ -52,6 +52,7 @@ public class User {
 
     @Column(name = "update_time")
     @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateTime;
 
     @Column(name = "reset_password_token", length= 30)

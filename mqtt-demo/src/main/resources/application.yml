@@ -1,0 +1,13 @@
+server:
+  port: 8087
+
+mqtt:
+  host: tcp://localhost:1883
+  clientId: soft_MQTT
+  poolConfig:
+    customSet: false
+    minIdle: 8
+    maxIdle: 20
+    maxTotal: 20
+    lifo: false
+

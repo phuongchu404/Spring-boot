@@ -42,10 +42,11 @@ public class UserDetailsImpl implements UserDetails, OAuth2User {
         this.username = username;
         this.roles = roles;
     }
-    public UserDetailsImpl(Long id, String email,Set<String> roles,Map<String, Object> attributes) {
+    public UserDetailsImpl(Long id, String email,String username,Set<String> roles,Map<String, Object> attributes) {
         this(id,email);
         this.roles = roles;
         this.attributes = attributes;
+        this.username = username;
     }
 
     @Override
@@ -88,6 +89,9 @@ public class UserDetailsImpl implements UserDetails, OAuth2User {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public Map<String, Object> getAttributes(){ return attributes;}
 
     @Override
     public String getName() {

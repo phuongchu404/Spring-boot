@@ -12,13 +12,16 @@ public class UserOAuth2Response {
 
     private String email;
 
+    private String username;
+
     private Set<String> roles;
 
     private Map<String, Object> attributes;
 
-    public UserOAuth2Response(Long id, String email, Set<String> roles) {
+    public UserOAuth2Response(Long id, String email,String username, Set<String> roles) {
         this.id = id;
         this.email = email;
         this.roles = roles;
+        this.username = username;
     }
 }

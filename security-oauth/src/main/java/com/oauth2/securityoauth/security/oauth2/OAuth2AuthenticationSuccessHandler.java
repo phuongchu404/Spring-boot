@@ -4,6 +4,8 @@ import com.oauth2.securityoauth.exception.BadRequestException;
 import com.oauth2.securityoauth.security.JwtUtils;
 import com.oauth2.securityoauth.security.UserDetailsImpl;
 import com.oauth2.securityoauth.utils.CookieUtils;
+import com.oauth2.securityoauth.utils.JsonConvert;
+import com.oauth2.securityoauth.utils.RedisUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,12 +22,19 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.oauth2.securityoauth.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Component
 @Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    @Value("${app.security.jwt-expiration}")
+    private Long jwtExpiration;
+
+    @Autowired
+    private RedisUtils redisUtils;
+
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -54,6 +63,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl = redirectUrl.orElse(getDefaultTargetUrl());
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String token = jwtUtils.createToken(userDetails.getUsername());
+        redisUtils.setValue(token, JsonConvert.convertObjectToJson(userDetails), jwtExpiration, TimeUnit.SECONDS);
         return UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token).build().toUriString();
     }
 

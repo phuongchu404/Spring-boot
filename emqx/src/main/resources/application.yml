@@ -1,0 +1,11 @@
+server:
+  port: 8887
+mqtt:
+#  host: tcp://127.0.0.1:1883
+  host: tcp://127.0.0.1:1883
+  clientId: mqtt_id
+  username: test
+  password: 123456
+  topic: test
+  timeout: 1000
+  keepalive: 100

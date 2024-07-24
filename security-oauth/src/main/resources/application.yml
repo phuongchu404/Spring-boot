@@ -57,7 +57,7 @@ app:
   cookie:
     cookie-name: phuongchu
 cor:
-  allow-origin: http://localhost:8889, https://localhost:3000
+  allow-origin: http://localhost:8889, http://localhost:3000
   allow-method: POST, GET, PUT, DELETE
   allow-credentials: true
 oauth2:
