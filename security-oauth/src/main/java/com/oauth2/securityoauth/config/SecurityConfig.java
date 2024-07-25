@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,7 +43,8 @@ public class SecurityConfig {
     private boolean allowCredentials;
 
     private final String[] commonURLs = {
-//            "/api/session/**",
+            "/api/session/**",
+//            "/user/*",
 //            "/email/**",
 //            "/oauth2/**",
 //            "/auth/**",
@@ -86,6 +88,7 @@ public class SecurityConfig {
                         .requestMatchers(commonURLs).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/oauth2/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
+                       // .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2Login -> oauth2Login
                         .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint
@@ -99,6 +102,10 @@ public class SecurityConfig {
                         .failureHandler(auth2AuthenticationFailureHandler))
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
 //    @Bean

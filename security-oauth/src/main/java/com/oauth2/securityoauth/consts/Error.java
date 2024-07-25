@@ -8,7 +8,8 @@ public enum Error {
     EMAIL_ALREADY_EXIST( "email is already in use",HttpStatus.CONFLICT),
     ROLE_NOT_FOUND( "role is not found", HttpStatus.NOT_FOUND),
     INCORRECT_USERNAME( "incorrect username", HttpStatus.UNAUTHORIZED),
-    INCORRECT_PASSWORD( "incorrect password", HttpStatus.UNAUTHORIZED)
+    INCORRECT_PASSWORD( "incorrect password", HttpStatus.UNAUTHORIZED),
+    RESOURCE_NOT_FOUND( "User not found by id", HttpStatus.NOT_FOUND)
     ;
     private String message;
 

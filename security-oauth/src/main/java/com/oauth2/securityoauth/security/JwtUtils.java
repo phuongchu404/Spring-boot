@@ -26,7 +26,7 @@ public class JwtUtils {
 
     public String createToken(String username){
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpiration);
+        Date expiryDate = new Date(now.getTime() + jwtExpiration*1000);
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(now)
