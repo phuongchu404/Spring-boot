@@ -8,7 +8,7 @@ spring:
     password: 123456
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -28,6 +28,7 @@ spring:
             scope:
               - email
               - profile
+
 #          facebook:
 #            client-id:
 #            client-secret:
@@ -47,6 +48,23 @@ spring:
 #            authorization-uri:
 #            token-uri:
 #            user-info-uri:
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: phuongchu552000@gmail.com
+#    password: Phuong1580@
+#    properties:
+#      mail:
+#        smtp:
+#          starttls:
+#            enable: true
+#            required: true
+#          auth: true
+#          connectiontimeout: 5000
+#          timeout: 5000
+#          writetimeout: 5000
+
+
 app:
   security:
     jwt-secret: phuongchu12313123131332131321321321313131312313
