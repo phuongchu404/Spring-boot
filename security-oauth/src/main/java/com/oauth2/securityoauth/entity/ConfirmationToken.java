@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class ConfirmationToken {
     @Column(name = "confirmation_token")
     private String confirmationToken;
 
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date")
     private Date createdDate;
@@ -31,7 +33,7 @@ public class ConfirmationToken {
 
     public ConfirmationToken(User user) {
         this.user = user;
-        createdDate = new Date();
+        //createdDate = new Date();
         confirmationToken = UUID.randomUUID().toString();
     }
 

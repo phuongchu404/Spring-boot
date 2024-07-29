@@ -1,5 +1,6 @@
 package com.oauth2.securityoauth.advice;
 
+import com.oauth2.securityoauth.exception.InvalidTokenException;
 import com.oauth2.securityoauth.exception.OAuth2AuthenticationProcessingException;
 import com.oauth2.securityoauth.exception.ResponseException;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(OAuth2AuthenticationProcessingException.class)
     public ResponseEntity<?> handleOAuth2AuthenticationProcessingException(OAuth2AuthenticationProcessingException exception){
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<?> handleInvalidTokenException(InvalidTokenException exception) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", exception.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);

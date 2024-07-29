@@ -48,21 +48,21 @@ spring:
 #            authorization-uri:
 #            token-uri:
 #            user-info-uri:
-#  mail:
-#    host: smtp.gmail.com
-#    port: 587
-#    username: phuongchu552000@gmail.com
-#    password: Phuong1580@
-#    properties:
-#      mail:
-#        smtp:
-#          starttls:
-#            enable: true
-#            required: true
-#          auth: true
-#          connectiontimeout: 5000
-#          timeout: 5000
-#          writetimeout: 5000
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: phuongchu404@gmail.com
+    password: sebt tjpq vtfl zkgr
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
 
 app:

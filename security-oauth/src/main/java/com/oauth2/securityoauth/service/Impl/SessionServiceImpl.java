@@ -7,31 +7,37 @@ import com.oauth2.securityoauth.dto.request.CreateUserRequest;
 import com.oauth2.securityoauth.dto.request.LoginRequest;
 import com.oauth2.securityoauth.dto.request.RegisterRequest;
 import com.oauth2.securityoauth.dto.response.JwtResponse;
+import com.oauth2.securityoauth.entity.ConfirmationToken;
 import com.oauth2.securityoauth.entity.Role;
 import com.oauth2.securityoauth.entity.User;
 import com.oauth2.securityoauth.entity.UserRole;
 import com.oauth2.securityoauth.exception.ResponseException;
+import com.oauth2.securityoauth.repo.ConfirmationTokenRepository;
 import com.oauth2.securityoauth.repo.RoleRepository;
 import com.oauth2.securityoauth.repo.UserRepository;
 import com.oauth2.securityoauth.repo.UserRoleRepository;
 import com.oauth2.securityoauth.security.JwtUtils;
 import com.oauth2.securityoauth.security.UserDetailsImpl;
+import com.oauth2.securityoauth.service.EmailService;
 import com.oauth2.securityoauth.service.SessionService;
 import com.oauth2.securityoauth.utils.JsonConvert;
 import com.oauth2.securityoauth.utils.MessageResponse;
 import com.oauth2.securityoauth.utils.RedisUtils;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.keygen.BytesKeyGenerator;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -60,14 +66,51 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private EmailService emailService;
+
     @Value("${app.security.jwt-expiration}")
     private Long jwtExpiration;
 
     @Value("${app.security.token-prefix}")
     private String TOKEN_PREFIX;
 
+    private static final BytesKeyGenerator DEFAULT_TOKEN_GENERATOR = KeyGenerators.secureRandom(15);
+
+    private static final Charset US_ASCII = Charset.forName("US-ASCII");
+    @Autowired
+    private ConfirmationTokenRepository confirmationTokenRepository;
+
+//    @Override
+//    public ResponseEntity<?> register(RegisterRequest request) throws MessagingException {
+//        if(userRepository.existsByUsername(request.getUsername())){
+//            log.error("Error: {}", Error.USERNAME_ALREADY_EXIST.getMessage());
+//            return ResponseEntity.status(Error.USERNAME_ALREADY_EXIST.getHttpStatus()).body(Error.USERNAME_ALREADY_EXIST.getMessage());
+//        }
+//        if(userRepository.existsByEmail(request.getEmail())){
+//            log.error("Error: {}", Error.EMAIL_ALREADY_EXIST.getMessage());
+//            return ResponseEntity.status(Error.EMAIL_ALREADY_EXIST.getHttpStatus()).body(Error.EMAIL_ALREADY_EXIST.getMessage());
+//        }
+//
+//        User user  = new User();
+//        user.setUsername(request.getUsername());
+//        user.setEmail(request.getEmail());
+//        user.setUsername(passwordEncoder.encode(request.getPassword()));
+//        userRepository.save(user);
+//
+//        Role role = roleRepository.findByName(ERole.USER.getValue()).orElseThrow(() -> new ResponseException(Error.ROLE_NOT_FOUND));
+//        UserRole userRole = new UserRole();
+//        userRole.setUser(user);
+//        userRole.setRole(role);
+//        userRoleRepository.save(userRole);
+//
+//        this.sendRegistrationConfirmationEmail(user);
+//
+//        return ResponseEntity.ok(new MessageResponse("User registered successfully"));
+//    }
+
     @Override
-    public ResponseEntity<?> register(RegisterRequest request) {
+    public ResponseEntity<?> register(RegisterRequest request) throws MessagingException {
         if(userRepository.existsByUsername(request.getUsername())){
             log.error("Error: {}", Error.USERNAME_ALREADY_EXIST.getMessage());
             return ResponseEntity.status(Error.USERNAME_ALREADY_EXIST.getHttpStatus()).body(Error.USERNAME_ALREADY_EXIST.getMessage());
@@ -88,6 +131,8 @@ public class SessionServiceImpl implements SessionService {
         userRole.setUser(user);
         userRole.setRole(role);
         userRoleRepository.save(userRole);
+
+        this.sendRegistrationConfirmationEmail(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully"));
     }
@@ -156,5 +201,15 @@ public class SessionServiceImpl implements SessionService {
             return header.substring(TOKEN_PREFIX.length());
         }
         return null;
+    }
+
+    private void sendRegistrationConfirmationEmail(User user) throws MessagingException {
+        String tokenValue = new String(Base64.encodeBase64URLSafe(DEFAULT_TOKEN_GENERATOR.generateKey()), US_ASCII);
+        ConfirmationToken confirmationToken = new ConfirmationToken(user);
+//        confirmationToken.setConfirmationToken(tokenValue);
+//        confirmationToken.setUser(user);
+        confirmationTokenRepository.save(confirmationToken);
+        emailService.sendConfirmationEmail(confirmationToken);
+
     }
 }

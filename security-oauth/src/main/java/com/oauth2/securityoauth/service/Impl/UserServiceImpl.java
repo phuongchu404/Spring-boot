@@ -1,7 +1,9 @@
 package com.oauth2.securityoauth.service.Impl;
 
 import com.oauth2.securityoauth.consts.Error;
+import com.oauth2.securityoauth.entity.ConfirmationToken;
 import com.oauth2.securityoauth.entity.User;
+import com.oauth2.securityoauth.exception.InvalidTokenException;
 import com.oauth2.securityoauth.exception.ResponseException;
 import com.oauth2.securityoauth.repo.UserRepository;
 import com.oauth2.securityoauth.security.UserDetailsImpl;
@@ -23,4 +25,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserName(username).orElseThrow(() -> new ResponseException(Error.RESOURCE_NOT_FOUND));
         return ResponseEntity.ok(user);
     }
+
+
 }
