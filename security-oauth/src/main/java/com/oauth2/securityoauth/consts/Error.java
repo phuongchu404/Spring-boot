@@ -9,7 +9,8 @@ public enum Error {
     ROLE_NOT_FOUND( "role is not found", HttpStatus.NOT_FOUND),
     INCORRECT_USERNAME( "incorrect username", HttpStatus.UNAUTHORIZED),
     INCORRECT_PASSWORD( "incorrect password", HttpStatus.UNAUTHORIZED),
-    RESOURCE_NOT_FOUND( "User not found by id", HttpStatus.NOT_FOUND)
+    RESOURCE_NOT_FOUND( "User not found by id", HttpStatus.NOT_FOUND),
+    USER_NOT_FOUND( "User not found", HttpStatus.NOT_FOUND)
     ;
     private String message;
 

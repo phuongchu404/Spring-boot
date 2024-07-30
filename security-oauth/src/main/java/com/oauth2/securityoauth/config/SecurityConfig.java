@@ -44,10 +44,7 @@ public class SecurityConfig {
 
     private final String[] commonURLs = {
             "/api/session/**",
-//            "/user/*",
-//            "/email/**",
-//            "/oauth2/**",
-//            "/auth/**",
+            "/api/email/**",
             "/"
     };
 

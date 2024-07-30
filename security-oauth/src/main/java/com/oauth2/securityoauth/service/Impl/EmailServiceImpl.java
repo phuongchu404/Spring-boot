@@ -46,10 +46,11 @@ public class EmailServiceImpl implements EmailService {
                 "<br/> Regards,<br/>" +
                 "MFA Registration team" +
                 "</body>" +
-                "</html>");
+                "</html>", true);
+        mailSender.send(message);
     }
 
     private String generateConfirmationLink(String token){
-        return "<a href=http://localhost:8080/confirm-email?token=\"+token+\">Confirm Email</a>";
+        return "<a href=http://localhost:8889/api/email/confirm-email?token="+token+">Confirm Email</a>";
     }
 }

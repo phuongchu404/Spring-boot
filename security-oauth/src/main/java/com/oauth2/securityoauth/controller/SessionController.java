@@ -2,8 +2,11 @@ package com.oauth2.securityoauth.controller;
 
 import com.oauth2.securityoauth.dto.request.CreateUserRequest;
 import com.oauth2.securityoauth.dto.request.LoginRequest;
+import com.oauth2.securityoauth.dto.request.RegisterRequest;
 import com.oauth2.securityoauth.service.RoleService;
 import com.oauth2.securityoauth.service.SessionService;
+import dev.samstevens.totp.exceptions.QrGenerationException;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +20,6 @@ public class SessionController {
 
     @Autowired
     private SessionService sessionService;
-
-
 
     @PostMapping("/add")
     //@ExceptionHandler(MethodArgumentNotValidException.class)
@@ -34,6 +35,11 @@ public class SessionController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request){
         return sessionService.logout(request);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) throws MessagingException, QrGenerationException {
+        return sessionService.register(request);
     }
 
 

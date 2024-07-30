@@ -18,6 +18,6 @@ public class RegisterRequest {
     private String email;
 
     @NotBlank(message = "Mật khẩu không được để trống")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\\\d)(?=.*[@#$%^&+=]).{8,}$", message = "Mật khẩu không đúng định dạng") // ít nhất 1 chữ thường, chữ hoa, chữ số, ký tự đặc biệt, độ dài tối thiểu 8 ký tự
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).{8,}$", message = "Mật khẩu không đúng định dạng") // ít nhất 1 chữ thường, chữ hoa, chữ số, ký tự đặc biệt, độ dài tối thiểu 8 ký tự
     private String password;
 }

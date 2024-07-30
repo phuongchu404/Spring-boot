@@ -28,7 +28,7 @@ public class ConfirmationToken {
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @MapsId
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public ConfirmationToken(User user) {

@@ -82,4 +82,8 @@ public class User {
     @Column(name = "name")
     private String name;
 
+    // add column secret for TOTP
+//    @Column(name = "secret_key")
+//    private String secretKey;
+
 }
