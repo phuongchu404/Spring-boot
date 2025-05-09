@@ -16,6 +16,7 @@ import com.oauth2.securityoauth.security.UserDetailsImpl;
 import com.oauth2.securityoauth.security.oauth2.user.OAuth2UserInfo;
 import com.oauth2.securityoauth.security.oauth2.user.OAuth2UserInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
